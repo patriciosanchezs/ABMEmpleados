@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Empleado } from 'src/app/models/Empleado';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { MensajeConfirmacionComponent } from '../shared/mensaje-confirmacion/mensaje-confirmacion.component';
 
 
 
@@ -20,7 +23,10 @@ export class ListEmpleadoComponent implements OnInit {
   dataSource: MatTableDataSource<Empleado>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  constructor(private _empleadoService: EmpleadoService) {
+  horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+
+  constructor(private _empleadoService: EmpleadoService, public dialog: MatDialog, private _snackBar: MatSnackBar) {
     this.cargarEmpleados();
   }
 
@@ -47,7 +53,26 @@ export class ListEmpleadoComponent implements OnInit {
   }
 
   eliminarEmpleado(index: number): void {
-    this._empleadoService.eliminarEmpleado(index);
-    this.cargarEmpleados();
+    const dialogRef = this.dialog.open(MensajeConfirmacionComponent, {
+      width: '350px',
+      data: {mensaje: '¿Está seguro que desea eliminar el empleado?'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === 'aceptar') {
+        this._empleadoService.eliminarEmpleado(index);
+        this.openSnackBar('Empleado eliminado correctamente!');
+        this.cargarEmpleados();
+      }
+    });
   }
+
+  openSnackBar(mensaje: string) {
+    this._snackBar.open(mensaje, 'Ok', {
+      duration: 30000,
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+    });
+  }
+
 }

@@ -10,6 +10,7 @@ import { AddEditEmpleadoComponent } from './components/add-edit-empleado/add-edi
 import { ListEmpleadoComponent } from './components/list-empleado/list-empleado.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MensajeConfirmacionComponent } from './components/shared/mensaje-confirmacion/mensaje-confirmacion.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { MensajeConfirmacionComponent } from './components/shared/mensaje-confir
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
